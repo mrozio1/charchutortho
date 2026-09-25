@@ -1,0 +1,811 @@
+/*
+ * base.css
+ * -----------------------------------------------------------------------
+ * Original, self-authored base layout & component stylesheet for the
+ * Steven W. Charchut DMD, MS Orthodontics website.
+ *
+ * This file replaces the third-party "Sesame Communications" global
+ * framework stylesheet that this site previously loaded from
+ * srwd.sesamehub.com. It contains no Sesame code and was written from
+ * scratch by inspecting only this repository's own markup
+ * (index.html, meet-dr-steven-charchut.html, treatment-options.html,
+ * appointment-request.html, office-tour.html, testimonials.html, etc.)
+ * and the site-specific override stylesheet assets/css/local.css, which
+ * loads immediately after this file and supplies the brand-specific
+ * colors, spacing and fine positioning on top of the structure below.
+ *
+ * Brand palette (see assets/css/local.css and the inline logo SVG):
+ *   teal  #29605a   gold/tan #beb87e   navy #141b52
+ * Brand fonts (already hosted locally, @font-face in local.css):
+ *   'Lato' (body), 'Vujahday Script' (decorative script accents)
+ * -----------------------------------------------------------------------
+ */
+
+/* ======================================================================
+   1. Reset & box model
+   ====================================================================== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+body,
+h1, h2, h3, h4, h5, h6,
+p, ul, ol, dl, dd,
+figure {
+  margin: 0;
+  padding: 0;
+}
+
+ul, ol {
+  list-style: none;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+a {
+  background-color: transparent;
+}
+
+img, svg, video, iframe, embed, object {
+  max-width: 100%;
+  height: auto;
+  vertical-align: middle;
+}
+
+svg {
+  display: inline-block;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  width: 100%;
+}
+
+/* ======================================================================
+   2. Design tokens
+   ====================================================================== */
+:root {
+  --color-teal: #29605a;
+  --color-gold: #beb87e;
+  --color-navy: #141b52;
+  --color-ink: #333333;
+  --color-muted: #808080;
+  --color-page-bg: #cccccc;
+  --color-surface: #ffffff;
+  --color-tile: #8d8d8d;
+  --font-body: 'Lato', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+  --font-script: 'Vujahday Script', cursive;
+  --header-height-mobile: 44px;
+  --container-max: 64.5em;
+  --transition-fast: 0.25s ease-in-out;
+  --transition-med: 0.35s ease-in-out;
+}
+
+/* ======================================================================
+   3. Base typography
+   ====================================================================== */
+html, body {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--color-ink);
+  background: var(--color-page-bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-body);
+  line-height: 1.2;
+  font-weight: 700;
+  color: var(--color-teal);
+}
+
+p {
+  margin: 0 0 1.2em;
+}
+
+p:last-child {
+  margin-bottom: 0;
+}
+
+a {
+  color: var(--color-teal);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+a:hover,
+a:focus-visible {
+  color: var(--color-gold);
+}
+
+strong, b { font-weight: 700; }
+em, i { font-style: italic; }
+
+#content ul,
+.content-text ul {
+  margin: 0 0 1.4em 1.4em;
+}
+
+#content ol,
+.content-text ol {
+  margin: 0 0 1.4em 1.4em;
+  list-style: decimal outside;
+}
+
+#content li,
+.content-text li {
+  margin-bottom: 0.4em;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+  margin: 2em 0;
+}
+
+/* visually-hidden utility (screenreader-only text) — local.css also
+   defines .screenreader; this generic fallback keeps things safe even
+   if that rule is ever removed. */
+.sr-only,
+.screenreader {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+/* skip link, for keyboard users */
+.skip-link {
+  position: absolute;
+  top: -3em;
+  left: 0.5em;
+  z-index: 10000;
+  background: var(--color-teal);
+  color: #fff;
+  padding: 0.6em 1em;
+  border-radius: 0 0 0.4em 0.4em;
+  transition: top var(--transition-fast);
+}
+
+.skip-link:focus {
+  top: 0;
+  color: #fff;
+}
+
+/* ======================================================================
+   4. Layout scaffolding — containers, rows, grid helpers
+   ====================================================================== */
+.container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 5%;
+}
+
+.row::after {
+  content: '';
+  display: table;
+  clear: both;
+}
+
+.clearfix::after {
+  content: '';
+  display: table;
+  clear: both;
+}
+
+/* width helpers used throughout content copy & forms */
+.width1 { width: 100%; }
+.width2 { width: 100%; }
+
+@media only screen and (min-width: 768px) {
+  .width1 { width: 48%; }
+  .width2 { width: 100%; }
+}
+
+/* ======================================================================
+   5. Icons
+   ====================================================================== */
+.icon {
+  display: inline-block;
+  vertical-align: middle;
+  fill: currentColor;
+}
+
+.fa-brands, .fa-solid, .fab, .fas, .fa {
+  line-height: 1;
+}
+
+/* ======================================================================
+   6. Header / masthead
+   ====================================================================== */
+#masthead {
+  width: 100%;
+  background: var(--color-surface);
+}
+
+#hd {
+  position: relative;
+}
+
+#hd .container {
+  position: relative;
+}
+
+#logo svg {
+  display: block;
+}
+
+.socialmedia {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2em;
+}
+
+@media only screen and (max-width: 1023px) {
+  .socialmedia {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+}
+
+.socialmedia a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#contactinfo {
+  position: relative;
+}
+
+#contactinfo .office {
+  position: relative;
+}
+
+#utilitynav a {
+  text-decoration: none;
+}
+
+/* ======================================================================
+   7. Primary navigation (#main-nav)
+   ----------------------------------------------------------------------
+   Mobile-first: the menu is a hidden slide/fade panel toggled by
+   button#trigger via base.js (adds/removes ".open" on ".collapsible").
+   At 1300px and up it becomes a static horizontal bar with hover
+   flyout submenus — matching local.css's own breakpoint system.
+   ====================================================================== */
+#main-nav .collapsible {
+  position: relative;
+}
+
+#main-nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+#main-nav ul li {
+  list-style: none;
+}
+
+#main-nav ul li a {
+  text-decoration: none;
+  display: inline-block;
+}
+
+#main-nav .trigger {
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+#main-nav .trigger:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+}
+
+/* collapsed (mobile / tablet) menu, hidden until opened */
+@media only screen and (max-width: 1299px) {
+  #main-nav ul {
+    display: none;
+  }
+
+  #main-nav .collapsible.open ul {
+    display: block;
+  }
+
+  #main-nav ul ul {
+    display: none;
+  }
+
+  #main-nav .collapsible.open ul li.open > ul {
+    display: block;
+  }
+}
+
+/* static horizontal desktop menu */
+@media only screen and (min-width: 1300px) {
+  #main-nav {
+    display: block;
+  }
+
+  #main-nav ul {
+    display: flex;
+    list-style: none;
+  }
+
+  #main-nav ul ul {
+    list-style: none;
+  }
+
+  #main-nav .trigger {
+    display: none;
+  }
+}
+
+/* ======================================================================
+   8. Body / content region (#bd, #sidebar, #subnav, #content)
+   ====================================================================== */
+#bd {
+  width: 100%;
+}
+
+#bd .container {
+  position: relative;
+}
+
+#sidebar {
+  list-style: none;
+}
+
+#subnav nav p {
+  margin: 0;
+}
+
+#subnav a {
+  text-decoration: none;
+}
+
+main#content {
+  display: block;
+  width: 100%;
+}
+
+main#content header {
+  margin-bottom: 1em;
+}
+
+.content-text {
+  color: var(--color-ink);
+}
+
+.content-text a {
+  word-break: break-word;
+}
+
+.content-text .note {
+  font-size: 0.85em;
+  color: var(--color-muted);
+  font-style: italic;
+}
+
+/* ======================================================================
+   9. Buttons
+   ====================================================================== */
+.button {
+  display: inline-block;
+  font-family: var(--font-body);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  text-align: center;
+  text-decoration: none;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: background-color var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast), transform var(--transition-fast);
+}
+
+.button:hover,
+.button:focus-visible {
+  transform: translateY(-1px);
+}
+
+.button-medium {
+  font-size: 0.85em;
+  padding: 0.95em 2.2em;
+}
+
+.site-button-color {
+  background-color: var(--color-teal);
+  color: #ffffff;
+  border-color: var(--color-teal);
+}
+
+.site-button-color:hover,
+.site-button-color:focus-visible {
+  background-color: var(--color-gold);
+  border-color: var(--color-gold);
+  color: #ffffff;
+}
+
+.box-round {
+  border-radius: 0.5em;
+}
+
+.box-shadow {
+  box-shadow: 0 0.35em 0.9em rgba(0, 0, 0, 0.18);
+}
+
+/* ======================================================================
+   10. Forms
+   ====================================================================== */
+.content-text form {
+  margin-top: 1.5em;
+}
+
+.content-text fieldset {
+  border: 0;
+  padding: 0;
+  margin: 0 0 1.5em;
+}
+
+@media only screen and (min-width: 768px) {
+  .content-text fieldset {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-content: flex-start;
+  }
+
+  .content-text fieldset legend,
+  .content-text fieldset > p.notice {
+    width: 100%;
+  }
+}
+
+.content-text fieldset legend {
+  font-weight: 700;
+  font-size: 1.1em;
+  color: var(--color-teal);
+  margin-bottom: 0.75em;
+  padding: 0;
+}
+
+.content-text .notice {
+  background: rgba(190, 184, 126, 0.16);
+  border: 1px solid var(--color-gold);
+  padding: 0.85em 1.1em;
+  font-size: 0.85em;
+  margin: 0 0 1.4em;
+}
+
+.content-text label {
+  display: block;
+  margin: 0 0 1.4em;
+  font-weight: 600;
+  font-size: 0.92em;
+  color: var(--color-ink);
+}
+
+.content-text label > span:first-child {
+  display: block;
+  margin-bottom: 0.4em;
+}
+
+.content-text label.required > span:first-child::after {
+  content: ' *';
+  color: var(--color-teal);
+  font-weight: 700;
+}
+
+.content-text label .quiet {
+  display: block;
+  font-weight: 400;
+  font-size: 0.85em;
+  color: var(--color-muted);
+  margin-top: 0.3em;
+}
+
+.content-text input[type="text"],
+.content-text input[type="email"],
+.content-text input[type="tel"],
+.content-text input[type="number"],
+.content-text input[type="date"],
+.content-text input[type="password"],
+.content-text select,
+.content-text textarea {
+  width: 100%;
+  font-family: var(--font-body);
+  font-size: 1em;
+  padding: 0.75em 0.9em;
+  color: var(--color-ink);
+  background: #ffffff;
+  border: 1px solid #c9c9c9;
+  border-radius: 0.35em;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.content-text textarea {
+  min-height: 8em;
+  resize: vertical;
+}
+
+.content-text input:focus,
+.content-text select:focus,
+.content-text textarea:focus {
+  outline: none;
+  border-color: var(--color-teal);
+  box-shadow: 0 0 0 3px rgba(41, 96, 90, 0.18);
+}
+
+.content-text fieldset button[type="submit"] {
+  margin-top: 0.25em;
+}
+
+/* honeypot field used by the form's spam trap */
+.content-text label[style*="display:none"] {
+  display: none !important;
+}
+
+/* office hours & similar simple tables */
+table.office-hours,
+.content-text table {
+  width: 100%;
+  margin: 0 0 1.5em;
+  font-size: 0.95em;
+}
+
+.content-text table td,
+.content-text table th {
+  padding: 0.35em 1em 0.35em 0;
+  text-align: left;
+  vertical-align: top;
+}
+
+.content-text table td p {
+  margin: 0 0 0.4em;
+}
+
+table.office-hours td:first-child {
+  font-weight: 700;
+  color: var(--color-teal);
+  white-space: nowrap;
+}
+
+/* responsive embedded map/video */
+.embed-container {
+  position: relative;
+  width: 100%;
+  height: 0;
+  padding-bottom: 75%;
+  overflow: hidden;
+  margin: 0 0 1.5em;
+}
+
+.embed-container iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+/* email de-obfuscation output (see base.js emailProt) */
+a.email.addicon {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+}
+
+a.email.addicon::before {
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
+  content: "\f0e0";
+  color: var(--color-teal);
+}
+
+/* ======================================================================
+   11. Hero banner (sub-pages) & homepage slideshow
+   ====================================================================== */
+img.hero {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+#slideshow {
+  position: relative;
+  overflow: hidden;
+  background: #000;
+}
+
+#home-slideshow {
+  position: relative;
+  overflow: hidden;
+}
+
+#home-slideshow .cycle-slideshow {
+  position: relative;
+}
+
+#home-slideshow img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+#ssoverlay {
+  position: relative;
+}
+
+/* ======================================================================
+   12. Homepage spotlight rows
+   ====================================================================== */
+#spot00 {
+  display: block;
+}
+
+#spot00 a {
+  text-decoration: none;
+}
+
+.spot01 .mod,
+.spot03 .mod {
+  text-align: left;
+}
+
+.associationlogos {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 1.2em;
+}
+
+.associationlogos a {
+  display: inline-block;
+}
+
+.spot02 a {
+  text-decoration: none;
+  display: block;
+}
+
+/* ======================================================================
+   13. Generic carousel component (.cycle-slideshow)
+   ----------------------------------------------------------------------
+   Populated at runtime by base.js. Direct slide children get the
+   ".cycle-slide" class; the visible one also gets ".cycle-slide-active".
+   Prev/next controls use the existing .slidecontrol / .cycle-prev /
+   .cycle-next markup already present in the HTML.
+   ====================================================================== */
+.cycle-slideshow {
+  position: relative;
+}
+
+.cycle-slideshow .cycle-slide {
+  display: none;
+}
+
+.cycle-slideshow .cycle-slide.cycle-slide-active {
+  display: block;
+}
+
+.cycle-slideshow.cycle-fade .cycle-slide {
+  display: block;
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.8s ease;
+  z-index: 1;
+}
+
+.cycle-slideshow.cycle-fade .cycle-slide.cycle-slide-active {
+  position: relative;
+  opacity: 1;
+  pointer-events: auto;
+  z-index: 2;
+}
+
+.cycle-slideshow.cycle-fade {
+  min-height: 1px;
+}
+
+.slidecontrol {
+  cursor: pointer;
+}
+
+/* lazy-loaded background images (set by base.js from [data-bg]) */
+.lazyload {
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+
+/* ======================================================================
+   14. Footer
+   ====================================================================== */
+#ft {
+  width: 100%;
+}
+
+#location {
+  width: 100%;
+}
+
+#location .office,
+#location .logo {
+  text-decoration: none;
+}
+
+#links {
+  width: 100%;
+}
+
+#links .util {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+#sesame-link {
+  display: inline-flex;
+  align-items: center;
+}
+
+#btt a {
+  text-decoration: none;
+}
+
+/* ======================================================================
+   15. Sitemap page list
+   ====================================================================== */
+body.sitemap #content ul {
+  list-style: none;
+  margin-left: 0;
+}
+
+body.sitemap #content ul ul {
+  margin-left: 1.4em;
+}
+
+/* ======================================================================
+   16. Small-screen safety net
+   ====================================================================== */
+@media only screen and (max-width: 480px) {
+  .container {
+    padding: 0 1.1em;
+  }
+}
