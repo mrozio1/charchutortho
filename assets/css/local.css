@@ -3309,3 +3309,16 @@ html[data-useragent*='Trident/7.0'] {
     left: auto;
   }
 }
+
+/* Homepage: keep intro text clear of the right-hand photo.
+   The photo starts at 50% + 1.5em; the container is centered (64.5em max)
+   with 5vw side padding, so the text must end before that point. */
+@media only screen and (min-width: 1300px) {
+  .home #bd #content {
+    max-width: min(31.5em, calc(31.25em - 5vw));
+  }
+  .home #bd #content header h1 {
+    /* the script heading doesn't wrap; scale it to the column width */
+    font-size: min(48px, calc((625px - 5vw) / 12.9));
+  }
+}
